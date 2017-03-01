@@ -1,30 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace BuildMerchImport
 {
     class Program
     {
-        private static string CATALOG_NAME = "masterCatalog_Marmot_full.xml";
+        private static string CATALOG_NAME = "exo_catalog_full.xml";
+        private static bool STRIP_COLOR = true;
+        private static bool REHYPHENATE_PRODUCT = true;
+
         static void Main(string[] args)
         {
-            var fileName = args[0];
-            var merchList = File.ReadAllLines(fileName);
+            var catalog = GetCatalog();
+            var merchLookup = new Dictionary<string, string>();
+
+            foreach (var fileName in args)
+            {
+                var merchList = File.ReadAllLines(fileName);
+                foreach(var row in merchList)
+                {
+                    var cols = row.Split(',');
+                    if (cols[0].Contains("-") && STRIP_COLOR)
+                        cols[0] = cols[0].Substring(0, cols[0].IndexOf('-'));
+                    if (REHYPHENATE_PRODUCT)
+                        cols[0] = cols[0].Insert(4, "-");
+
+                    merchLookup[cols[0]] = cols[1];
+                }
+            }
+
+            MakeSomeXML(merchLookup, catalog);
+        }
+
+        static XmlDocument GetCatalog()
+        {
             var catalog = new XmlDocument();
             using (var catFile = new StreamReader(File.Open(CATALOG_NAME, FileMode.Open)))
             {
                 catalog.Load(catFile);
             }
-
-            MakeSomeXML(merchList, catalog);
+            return catalog;
         }
 
-        static void MakeSomeXML(string[] merchList, XmlDocument catalog)
+        static void MakeSomeXML(Dictionary<string, string> merchLookup, XmlDocument catalog)
         {
             
             var products = catalog.GetElementsByTagName("product");
@@ -34,16 +53,15 @@ namespace BuildMerchImport
 
             using (var output = new StreamWriter(File.Open("output.xml", FileMode.Create)))
             {
-                output.WriteLine("<?xml version=\"1.0\" encoding=\"UTF - 8\"?>");
+                output.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
                 output.WriteLine("<catalog xmlns=\"http://www.demandware.com/xml/impex/catalog/2006-10-31\" catalog-id=\"masterCatalog_Marmot\">");
 
-                foreach (var merchItem in merchList)
+                foreach (var productId in merchLookup.Keys)
                 {
-                    var merchComponents = merchItem.Split(',');
-                    if (!productDictionary.ContainsKey(merchComponents[0]))
+                    if (!productDictionary.ContainsKey(productId))
                         continue;
-                    var product = productDictionary[merchComponents[0]];
-                    WriteProductNode(output, merchComponents[0], merchComponents[1], product["variations"]["variants"].ChildNodes);
+                    var product = productDictionary[productId];
+                    WriteProductNode(output, productId, merchLookup[productId], product["variations"]["variants"].ChildNodes);
                 }
 
                 output.WriteLine("</catalog>");

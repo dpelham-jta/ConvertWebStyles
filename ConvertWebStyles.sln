@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "URLTester", "URLTester\URLT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildMerchImport", "BuildMerchImport\BuildMerchImport.csproj", "{DA0585B3-E5DB-425D-AE11-74139655E038}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Building301s", "Building301s\Building301s.csproj", "{C44DA25A-7FA4-4D17-8B04-B6265BF3B3B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{DA0585B3-E5DB-425D-AE11-74139655E038}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA0585B3-E5DB-425D-AE11-74139655E038}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA0585B3-E5DB-425D-AE11-74139655E038}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C44DA25A-7FA4-4D17-8B04-B6265BF3B3B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C44DA25A-7FA4-4D17-8B04-B6265BF3B3B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C44DA25A-7FA4-4D17-8B04-B6265BF3B3B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C44DA25A-7FA4-4D17-8B04-B6265BF3B3B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
